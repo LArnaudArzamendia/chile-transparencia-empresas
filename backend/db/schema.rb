@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_29_012144) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_29_022427) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,6 +20,14 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_29_012144) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "normalized_rut"
+    t.integer "year"
+    t.integer "month"
+    t.decimal "capital", precision: 15, scale: 2
+    t.string "comuna_tributaria"
+    t.string "region_tributaria"
+    t.string "comuna_social"
+    t.string "region_social"
+    t.string "company_type"
     t.index ["name"], name: "index_companies_on_name"
     t.index ["rut"], name: "index_companies_on_rut"
   end

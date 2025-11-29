@@ -4,28 +4,49 @@ module Api
       def index
         query = params[:q]
 
-        companies = Company.search(query).limit(20).includes(:representatives)
+        companies = Company.search(query)
+                           .includes(company_representatives: :representative)
+                           .limit(20)
+
         representatives = Representative.search(query)
+                                        .includes(company_representatives: :company)
                                         .limit(20)
-                                        .includes(:companies)
 
         render json: {
           query: query,
-          companies: companies.as_json(
-            only: [:id, :rut, :name],
-            include: {
-              representatives: {
-                only: [:id, :rut, :full_name],
-                through: :company_representatives
+          companies: companies.map { |c|
+            {
+              id: c.id,
+              rut: c.rut,
+              name: c.name,
+              year: c.year,
+              comuna_social: c.comuna_social,
+              region_social: c.region_social,
+              representatives: c.company_representatives.map { |cr|
+                rep = cr.representative
+                {
+                  id: rep.id,
+                  rut: rep.rut,
+                  full_name: rep.full_name,
+                  role: cr.role
+                }
               }
             }
-          ),
-          representatives: representatives.map { |rep|
+          },
+          representatives: representatives.map { |r|
             {
-              id: rep.id,
-              rut: rep.rut,
-              full_name: rep.full_name,
-              companies: rep.companies.select(:id, :rut, :name)
+              id: r.id,
+              rut: r.rut,
+              full_name: r.full_name,
+              companies: r.company_representatives.map { |cr|
+                company = cr.company
+                {
+                  id: company.id,
+                  rut: company.rut,
+                  name: company.name,
+                  role: cr.role
+                }
+              }
             }
           }
         }
