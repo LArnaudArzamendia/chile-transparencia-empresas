@@ -1,0 +1,18 @@
+# Rails / Ruby
+backend/log/*
+backend/tmp/*
+backend/.bundle
+backend/vendor/bundle
+backend/storage/*
+backend/node_modules
+
+# Node / frontend
+frontend/node_modules
+frontend/dist
+
+# General
+*.log
+*.tmp
+.DS_Store
+.env
+.env.*
